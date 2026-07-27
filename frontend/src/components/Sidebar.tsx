@@ -7,10 +7,13 @@ import {
   Activity
 } from "lucide-react"
 
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 
 function Sidebar() {
+
+  const location = useLocation()
+
 
   const menu = [
     {
@@ -84,6 +87,7 @@ function Sidebar() {
           AI SOC
         </h1>
 
+
       </div>
 
 
@@ -95,24 +99,27 @@ function Sidebar() {
 
           const Icon = item.icon
 
+          const active = location.pathname === item.path
+
 
           return (
 
             <Link
               key={item.name}
               to={item.path}
-              className="
+              className={`
                 flex
                 items-center
                 gap-3
                 p-3
                 rounded-xl
-                text-zinc-400
-                hover:bg-zinc-800
-                hover:text-blue-400
-                cursor-pointer
                 transition
-              "
+                ${
+                  active
+                  ? "bg-blue-600 text-white"
+                  : "text-zinc-400 hover:bg-zinc-800 hover:text-blue-400"
+                }
+              `}
             >
 
               <Icon size={20}/>
@@ -130,6 +137,7 @@ function Sidebar() {
 
 
       </nav>
+
 
 
 
