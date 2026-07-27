@@ -1,3 +1,5 @@
+import MetricCard from "../components/ui/MetricCard"
+
 import {
   ShieldAlert,
   ShieldCheck,
@@ -7,7 +9,9 @@ import {
 } from "lucide-react"
 
 
+
 function Dashboard() {
+
 
   const incidents = [
     {
@@ -37,6 +41,7 @@ function Dashboard() {
   ]
 
 
+
   return (
 
     <div className="
@@ -64,11 +69,11 @@ function Dashboard() {
           Monitoramento inteligente de ameaças em tempo real
         </p>
 
+
       </div>
 
 
 
-      {/* Cards principais */}
 
       <div className="
         grid
@@ -114,6 +119,7 @@ function Dashboard() {
 
 
 
+
       <div className="
         grid
         grid-cols-3
@@ -121,8 +127,6 @@ function Dashboard() {
         mt-8
       ">
 
-
-        {/* AI Status */}
 
         <div className="
           col-span-1
@@ -149,6 +153,7 @@ function Dashboard() {
             items-center
             gap-4
           ">
+
 
             <div className="
               w-14
@@ -188,6 +193,7 @@ function Dashboard() {
 
             </div>
 
+
           </div>
 
 
@@ -195,7 +201,7 @@ function Dashboard() {
 
 
 
-        {/* Threat Level */}
+
 
         <div className="
           col-span-2
@@ -223,6 +229,7 @@ function Dashboard() {
             gap-4
             h-32
           ">
+
 
             {[40,70,55,90,60,80,45].map((height,index)=>(
 
@@ -252,7 +259,6 @@ function Dashboard() {
 
 
 
-      {/* Incident Table */}
 
 
       <div className="
@@ -272,9 +278,11 @@ function Dashboard() {
           mb-6
         ">
 
+
           <AlertTriangle
             className="text-yellow-400"
           />
+
 
           <h2 className="
             text-white
@@ -286,6 +294,8 @@ function Dashboard() {
 
 
         </div>
+
+
 
 
 
@@ -323,13 +333,17 @@ function Dashboard() {
 
             </tr>
 
+
           </thead>
+
+
 
 
           <tbody>
 
 
             {incidents.map((incident)=>(
+
 
               <tr
                 key={incident.id}
@@ -350,14 +364,8 @@ function Dashboard() {
                 </td>
 
 
-                <td>
-
-                  <span className="
-                    text-red-400
-                  ">
-                    {incident.severity}
-                  </span>
-
+                <td className="text-red-400">
+                  {incident.severity}
                 </td>
 
 
@@ -367,6 +375,7 @@ function Dashboard() {
 
 
               </tr>
+
 
             ))}
 
@@ -383,62 +392,9 @@ function Dashboard() {
     </div>
 
   )
+
 }
 
-
-
-function MetricCard({
-  title,
-  value,
-  icon,
-  color
-}:{
-  title:string
-  value:string
-  icon:React.ReactNode
-  color:string
-}){
-
-
-  return (
-
-    <div className="
-      bg-zinc-900
-      border
-      border-zinc-800
-      rounded-2xl
-      p-6
-    ">
-
-
-      <div className={color}>
-        {icon}
-      </div>
-
-
-      <p className="
-        text-zinc-400
-        text-sm
-        mt-4
-      ">
-        {title}
-      </p>
-
-
-      <h2 className="
-        text-white
-        text-3xl
-        font-bold
-        mt-2
-      ">
-        {value}
-      </h2>
-
-
-    </div>
-
-  )
-}
 
 
 export default Dashboard
