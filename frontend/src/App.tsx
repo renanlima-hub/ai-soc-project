@@ -1,45 +1,96 @@
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom"
+
 import Sidebar from "./components/Sidebar"
 import Header from "./components/Header"
+
 import Dashboard from "./pages/Dashboard"
+import Incidents from "./pages/Incidents"
+import Reports from "./pages/Reports"
+import Clients from "./pages/Clients"
+import Settings from "./pages/Settings"
 
 
 function App() {
 
   return (
 
-    <div className="
-      flex
-      min-h-screen
-      bg-black
-    ">
-
-
-      <Sidebar />
-
+    <BrowserRouter>
 
       <div className="
-        flex-1
         flex
-        flex-col
+        min-h-screen
+        bg-black
       ">
 
 
-        <Header />
+        <Sidebar />
 
 
-        <main className="
+        <div className="
           flex-1
+          flex
+          flex-col
         ">
 
-          <Dashboard />
 
-        </main>
+          <Header />
+
+
+          <Routes>
+
+            <Route 
+              path="/dashboard"
+              element={<Dashboard />}
+            />
+
+
+            <Route 
+              path="/incidents"
+              element={<Incidents />}
+            />
+
+
+            <Route 
+              path="/reports"
+              element={<Reports />}
+            />
+
+
+            <Route 
+              path="/clients"
+              element={<Clients />}
+            />
+
+
+            <Route 
+              path="/settings"
+              element={<Settings />}
+            />
+
+
+            <Route
+              path="*"
+              element={
+                <Navigate to="/dashboard"/>
+              }
+            />
+
+
+          </Routes>
+
+
+        </div>
 
 
       </div>
 
 
-    </div>
+    </BrowserRouter>
 
   )
 

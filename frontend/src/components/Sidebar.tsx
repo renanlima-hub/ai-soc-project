@@ -7,29 +7,36 @@ import {
   Activity
 } from "lucide-react"
 
+import { Link } from "react-router-dom"
+
 
 function Sidebar() {
 
   const menu = [
     {
       name: "Dashboard",
-      icon: LayoutDashboard
+      icon: LayoutDashboard,
+      path: "/dashboard"
     },
     {
       name: "Incidentes",
-      icon: ShieldAlert
+      icon: ShieldAlert,
+      path: "/incidents"
     },
     {
       name: "Relatórios",
-      icon: FileText
+      icon: FileText,
+      path: "/reports"
     },
     {
       name: "Clientes",
-      icon: Users
+      icon: Users,
+      path: "/clients"
     },
     {
       name: "Configurações",
-      icon: Settings
+      icon: Settings,
+      path: "/settings"
     }
   ]
 
@@ -61,7 +68,7 @@ function Sidebar() {
           p-2
         ">
 
-          <Activity 
+          <Activity
             size={22}
             className="text-white"
           />
@@ -91,8 +98,9 @@ function Sidebar() {
 
           return (
 
-            <div
+            <Link
               key={item.name}
+              to={item.path}
               className="
                 flex
                 items-center
@@ -114,7 +122,7 @@ function Sidebar() {
               </span>
 
 
-            </div>
+            </Link>
 
           )
 
@@ -150,13 +158,12 @@ function Sidebar() {
           mt-2
         ">
 
-
           <div className="
             w-2
             h-2
             rounded-full
             bg-green-500
-          " />
+          "/>
 
 
           <span className="
