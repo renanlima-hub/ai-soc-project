@@ -1,9 +1,12 @@
+import MetricCard from "../components/ui/MetricCard"
+
 import {
   Building2,
   Server,
   ShieldAlert,
   ShieldCheck
 } from "lucide-react"
+
 
 
 function Clients() {
@@ -45,6 +48,7 @@ function Clients() {
   ]
 
 
+
   return (
 
     <div className="
@@ -72,12 +76,11 @@ function Clients() {
           Empresas e ambientes protegidos pelo AI SOC.
         </p>
 
+
       </div>
 
 
 
-
-      {/* Summary Cards */}
 
 
       <div className="
@@ -87,7 +90,7 @@ function Clients() {
       ">
 
 
-        <ClientCard
+        <MetricCard
           title="Active Clients"
           value="18"
           icon={<Building2 />}
@@ -95,7 +98,7 @@ function Clients() {
         />
 
 
-        <ClientCard
+        <MetricCard
           title="Monitored Assets"
           value="470"
           icon={<Server />}
@@ -103,7 +106,7 @@ function Clients() {
         />
 
 
-        <ClientCard
+        <MetricCard
           title="Open Incidents"
           value="28"
           icon={<ShieldAlert />}
@@ -111,7 +114,7 @@ function Clients() {
         />
 
 
-        <ClientCard
+        <MetricCard
           title="Protected"
           value="94%"
           icon={<ShieldCheck />}
@@ -125,7 +128,6 @@ function Clients() {
 
 
 
-      {/* Clients Table */}
 
 
       <div className="
@@ -149,6 +151,8 @@ function Clients() {
 
 
 
+
+
         <table className="
           w-full
           text-left
@@ -164,25 +168,31 @@ function Clients() {
               text-sm
             ">
 
+
               <th className="pb-4">
                 Company
               </th>
+
 
               <th>
                 Sector
               </th>
 
+
               <th>
                 Assets
               </th>
+
 
               <th>
                 Incidents
               </th>
 
+
               <th>
                 Risk
               </th>
+
 
               <th>
                 Status
@@ -191,7 +201,11 @@ function Clients() {
 
             </tr>
 
+
           </thead>
+
+
+
 
 
           <tbody>
@@ -236,18 +250,22 @@ function Clients() {
 
                 <td>
 
+
                   <RiskBadge
                     risk={client.risk}
                   />
+
 
                 </td>
 
 
                 <td>
 
+
                   <StatusBadge
                     status={client.status}
                   />
+
 
                 </td>
 
@@ -278,62 +296,6 @@ function Clients() {
 
 
 
-function ClientCard({
-  title,
-  value,
-  icon,
-  color
-}:{
-  title:string
-  value:string
-  icon:React.ReactNode
-  color:string
-}){
-
-
-  return (
-
-    <div className="
-      bg-zinc-900
-      border
-      border-zinc-800
-      rounded-2xl
-      p-6
-    ">
-
-
-      <div className={color}>
-        {icon}
-      </div>
-
-
-      <p className="
-        text-zinc-400
-        mt-4
-      ">
-        {title}
-      </p>
-
-
-      <h2 className="
-        text-white
-        text-3xl
-        font-bold
-        mt-2
-      ">
-        {value}
-      </h2>
-
-
-    </div>
-
-  )
-
-}
-
-
-
-
 
 function RiskBadge({
   risk
@@ -356,6 +318,7 @@ function RiskBadge({
   }
 
 
+
   return (
 
     <span className={`
@@ -374,6 +337,7 @@ function RiskBadge({
   )
 
 }
+
 
 
 
@@ -400,6 +364,7 @@ function StatusBadge({
   }
 
 
+
   return (
 
     <span className={`
@@ -418,6 +383,8 @@ function StatusBadge({
   )
 
 }
+
+
 
 
 

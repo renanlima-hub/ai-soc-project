@@ -1,3 +1,6 @@
+import MetricCard from "../components/ui/MetricCard"
+import StatusBadge from "../components/ui/StatusBadge"
+
 import {
   FileText,
   Sparkles,
@@ -55,6 +58,7 @@ function Reports() {
 
       <div className="mb-8">
 
+
         <h1 className="
           text-3xl
           font-bold
@@ -78,7 +82,6 @@ function Reports() {
 
 
 
-      {/* Summary Cards */}
 
 
       <div className="
@@ -88,7 +91,7 @@ function Reports() {
       ">
 
 
-        <ReportCard
+        <MetricCard
           title="Total Reports"
           value="128"
           icon={<FileText />}
@@ -96,7 +99,7 @@ function Reports() {
         />
 
 
-        <ReportCard
+        <MetricCard
           title="AI Generated"
           value="94"
           icon={<Sparkles />}
@@ -104,7 +107,7 @@ function Reports() {
         />
 
 
-        <ReportCard
+        <MetricCard
           title="Processing"
           value="6"
           icon={<Clock />}
@@ -112,7 +115,7 @@ function Reports() {
         />
 
 
-        <ReportCard
+        <MetricCard
           title="Completed"
           value="118"
           icon={<CheckCircle />}
@@ -126,7 +129,6 @@ function Reports() {
 
 
 
-      {/* AI Generation Area */}
 
 
       <div className="
@@ -166,6 +168,8 @@ function Reports() {
 
 
 
+
+
         <button className="
           bg-blue-600
           hover:bg-blue-700
@@ -179,9 +183,11 @@ function Reports() {
           transition
         ">
 
+
           <Sparkles size={18}/>
 
           Generate Report
+
 
         </button>
 
@@ -192,7 +198,7 @@ function Reports() {
 
 
 
-      {/* Reports Table */}
+
 
 
       <div className="
@@ -213,6 +219,8 @@ function Reports() {
         ">
           Recent Reports
         </h2>
+
+
 
 
 
@@ -270,10 +278,12 @@ function Reports() {
 
 
 
+
           <tbody>
 
 
             {reports.map((report)=>(
+
 
               <tr
                 key={report.id}
@@ -283,6 +293,7 @@ function Reports() {
                   text-zinc-300
                 "
               >
+
 
                 <td className="py-4">
                   {report.id}
@@ -309,7 +320,7 @@ function Reports() {
 
                 <td>
 
-                  <ReportStatus
+                  <StatusBadge
                     status={report.status}
                   />
 
@@ -317,6 +328,7 @@ function Reports() {
 
 
                 <td>
+
 
                   <button className="
                     text-blue-400
@@ -326,11 +338,15 @@ function Reports() {
                     gap-2
                   ">
 
+
                     <Download size={16}/>
+
 
                     View
 
+
                   </button>
+
 
                 </td>
 
@@ -352,111 +368,6 @@ function Reports() {
 
 
     </div>
-
-  )
-
-}
-
-
-
-
-
-
-
-function ReportCard({
-  title,
-  value,
-  icon,
-  color
-}:{
-  title:string
-  value:string
-  icon:React.ReactNode
-  color:string
-}){
-
-
-  return (
-
-    <div className="
-      bg-zinc-900
-      border
-      border-zinc-800
-      rounded-2xl
-      p-6
-    ">
-
-
-      <div className={color}>
-        {icon}
-      </div>
-
-
-      <p className="
-        text-zinc-400
-        mt-4
-      ">
-        {title}
-      </p>
-
-
-      <h2 className="
-        text-white
-        text-3xl
-        font-bold
-        mt-2
-      ">
-        {value}
-      </h2>
-
-
-    </div>
-
-  )
-
-}
-
-
-
-
-
-
-
-function ReportStatus({
-  status
-}:{
-  status:string
-}){
-
-
-  const colors = {
-
-    Completed:
-      "bg-green-500/20 text-green-400",
-
-    Processing:
-      "bg-yellow-500/20 text-yellow-400",
-
-    Pending:
-      "bg-zinc-700 text-zinc-300"
-
-  }
-
-
-  return (
-
-    <span className={`
-      px-3
-      py-1
-      rounded-full
-      text-xs
-      font-medium
-      ${colors[status as keyof typeof colors]}
-    `}>
-
-      {status}
-
-    </span>
 
   )
 
