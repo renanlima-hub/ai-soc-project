@@ -1,3 +1,7 @@
+import MetricCard from "../components/ui/MetricCard"
+import SeverityBadge from "../components/ui/SeverityBadge"
+import { incidents } from "../data/incidents"
+
 import {
   AlertTriangle,
   ShieldAlert,
@@ -6,48 +10,8 @@ import {
 } from "lucide-react"
 
 
+
 function Incidents() {
-
-
-  const incidents = [
-    {
-      id: "#001",
-      type: "SQL Injection",
-      source: "192.168.1.24",
-      severity: "Critical",
-      status: "Blocked",
-      action: "Firewall Rule Applied",
-      time: "10 min ago"
-    },
-    {
-      id: "#002",
-      type: "Brute Force Attack",
-      source: "45.32.120.8",
-      severity: "High",
-      status: "Investigating",
-      action: "User Locked",
-      time: "35 min ago"
-    },
-    {
-      id: "#003",
-      type: "Malware Detection",
-      source: "Endpoint-04",
-      severity: "Medium",
-      status: "Resolved",
-      action: "File Removed",
-      time: "1 hour ago"
-    },
-    {
-      id: "#004",
-      type: "Suspicious Login",
-      source: "VPN Gateway",
-      severity: "Low",
-      status: "Monitoring",
-      action: "Session Logged",
-      time: "3 hours ago"
-    }
-  ]
-
 
 
   return (
@@ -77,12 +41,11 @@ function Incidents() {
           Investigação e gerenciamento de ameaças detectadas pela IA.
         </p>
 
+
       </div>
 
 
 
-
-      {/* Summary Cards */}
 
 
       <div className="
@@ -92,7 +55,7 @@ function Incidents() {
       ">
 
 
-        <SummaryCard
+        <MetricCard
           title="Critical"
           value="12"
           icon={<ShieldAlert />}
@@ -100,7 +63,7 @@ function Incidents() {
         />
 
 
-        <SummaryCard
+        <MetricCard
           title="Investigating"
           value="8"
           icon={<Clock />}
@@ -108,7 +71,7 @@ function Incidents() {
         />
 
 
-        <SummaryCard
+        <MetricCard
           title="Resolved"
           value="45"
           icon={<CheckCircle />}
@@ -116,7 +79,7 @@ function Incidents() {
         />
 
 
-        <SummaryCard
+        <MetricCard
           title="Total Alerts"
           value="65"
           icon={<AlertTriangle />}
@@ -129,8 +92,6 @@ function Incidents() {
 
 
 
-
-      {/* Filters */}
 
 
       <div className="
@@ -151,7 +112,6 @@ function Incidents() {
           px-4
           py-2
           rounded-lg
-          text-sm
         ">
           All
         </button>
@@ -163,7 +123,6 @@ function Incidents() {
           px-4
           py-2
           rounded-lg
-          text-sm
         ">
           Critical
         </button>
@@ -175,7 +134,6 @@ function Incidents() {
           px-4
           py-2
           rounded-lg
-          text-sm
         ">
           High
         </button>
@@ -187,7 +145,6 @@ function Incidents() {
           px-4
           py-2
           rounded-lg
-          text-sm
         ">
           Blocked
         </button>
@@ -199,7 +156,6 @@ function Incidents() {
 
 
 
-      {/* Incident Table */}
 
 
       <div className="
@@ -223,6 +179,8 @@ function Incidents() {
 
 
 
+
+
         <table className="
           w-full
           text-left
@@ -238,44 +196,55 @@ function Incidents() {
               border-zinc-800
             ">
 
+
               <th className="pb-4">
                 ID
               </th>
+
 
               <th>
                 Attack
               </th>
 
+
               <th>
                 Source
               </th>
+
 
               <th>
                 Severity
               </th>
 
+
               <th>
                 Status
               </th>
+
 
               <th>
                 Action
               </th>
 
+
               <th>
                 Time
               </th>
 
+
             </tr>
 
+
           </thead>
+
+
+
 
 
           <tbody>
 
 
-            {incidents.map((incident)=>(
-
+            {incidents.map((incident) => (
 
               <tr
                 key={incident.id}
@@ -285,6 +254,7 @@ function Incidents() {
                   text-zinc-300
                 "
               >
+
 
                 <td className="py-4">
                   {incident.id}
@@ -327,7 +297,6 @@ function Incidents() {
 
               </tr>
 
-
             ))}
 
 
@@ -342,110 +311,6 @@ function Incidents() {
 
 
     </div>
-
-  )
-
-}
-
-
-
-
-
-function SummaryCard({
-  title,
-  value,
-  icon,
-  color
-}:{
-  title:string
-  value:string
-  icon:React.ReactNode
-  color:string
-}){
-
-
-  return (
-
-    <div className="
-      bg-zinc-900
-      border
-      border-zinc-800
-      rounded-2xl
-      p-6
-    ">
-
-
-      <div className={color}>
-        {icon}
-      </div>
-
-
-      <p className="
-        text-zinc-400
-        mt-4
-      ">
-        {title}
-      </p>
-
-
-      <h2 className="
-        text-white
-        text-3xl
-        font-bold
-        mt-2
-      ">
-        {value}
-      </h2>
-
-
-    </div>
-
-  )
-
-}
-
-
-
-
-
-function SeverityBadge({
-  severity
-}:{
-  severity:string
-}){
-
-
-  const styles = {
-
-    Critical:
-      "bg-red-500/20 text-red-400",
-
-    High:
-      "bg-orange-500/20 text-orange-400",
-
-    Medium:
-      "bg-yellow-500/20 text-yellow-400",
-
-    Low:
-      "bg-blue-500/20 text-blue-400"
-
-  }
-
-
-  return (
-
-    <span className={`
-      px-3
-      py-1
-      rounded-full
-      text-xs
-      font-medium
-      ${styles[severity as keyof typeof styles]}
-    `}>
-
-      {severity}
-
-    </span>
 
   )
 
