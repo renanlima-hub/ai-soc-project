@@ -1,6 +1,18 @@
+import {
+  useEffect,
+  useState
+} from "react"
+
+import {
+  useNavigate
+} from "react-router-dom"
+
 import MetricCard from "../components/ui/MetricCard"
 import SeverityBadge from "../components/ui/SeverityBadge"
-import { incidents } from "../data/incidents"
+
+import api from "../services/api"
+
+import type { Incident } from "../types/Incident"
 
 import {
   AlertTriangle,
@@ -11,7 +23,83 @@ import {
 
 
 
-function Incidents() {
+function Incidents(){
+
+
+  const [incidents,setIncidents] = useState<Incident[]>([])
+
+  const [loading,setLoading] = useState(true)
+
+
+  const navigate = useNavigate()
+
+
+
+  useEffect(()=>{
+
+
+    api("/incidents")
+
+      .then(response=>{
+
+        setIncidents(response)
+
+      })
+
+      .catch(error=>{
+
+        console.error(
+          "Erro carregando incidents:",
+          error
+        )
+
+      })
+
+      .finally(()=>{
+
+        setLoading(false)
+
+      })
+
+
+  },[])
+
+
+
+
+
+
+  const critical = incidents.filter(
+
+    incident =>
+      incident.severity === "Critical"
+
+  ).length
+
+
+
+
+
+  const investigating = incidents.filter(
+
+    incident =>
+      incident.status === "Investigating"
+
+  ).length
+
+
+
+
+
+  const resolved = incidents.filter(
+
+    incident =>
+      incident.status === "Resolved"
+
+  ).length
+
+
+
 
 
   return (
@@ -21,6 +109,7 @@ function Incidents() {
       bg-black
       min-h-screen
     ">
+
 
 
       <div className="mb-8">
@@ -38,7 +127,7 @@ function Incidents() {
           text-zinc-400
           mt-2
         ">
-          Investigação e gerenciamento de ameaças detectadas pela IA.
+          Investigação e gerenciamento de ameaças detectadas pelo SOC.
         </p>
 
 
@@ -48,41 +137,48 @@ function Incidents() {
 
 
 
+
+
+
       <div className="
         grid
-        grid-cols-4
+        grid-cols-1
+        md:grid-cols-4
         gap-6
       ">
 
 
         <MetricCard
           title="Critical"
-          value="12"
-          icon={<ShieldAlert />}
+          value={critical}
+          icon={<ShieldAlert/>}
           color="text-red-400"
         />
 
 
+
         <MetricCard
           title="Investigating"
-          value="8"
-          icon={<Clock />}
+          value={investigating}
+          icon={<Clock/>}
           color="text-yellow-400"
         />
 
 
+
         <MetricCard
           title="Resolved"
-          value="45"
-          icon={<CheckCircle />}
+          value={resolved}
+          icon={<CheckCircle/>}
           color="text-green-400"
         />
 
 
+
         <MetricCard
           title="Total Alerts"
-          value="65"
-          icon={<AlertTriangle />}
+          value={incidents.length}
+          icon={<AlertTriangle/>}
           color="text-blue-400"
         />
 
@@ -90,67 +186,6 @@ function Incidents() {
       </div>
 
 
-
-
-
-
-      <div className="
-        mt-8
-        bg-zinc-900
-        border
-        border-zinc-800
-        rounded-2xl
-        p-5
-        flex
-        gap-4
-      ">
-
-
-        <button className="
-          bg-blue-600
-          text-white
-          px-4
-          py-2
-          rounded-lg
-        ">
-          All
-        </button>
-
-
-        <button className="
-          bg-zinc-800
-          text-zinc-300
-          px-4
-          py-2
-          rounded-lg
-        ">
-          Critical
-        </button>
-
-
-        <button className="
-          bg-zinc-800
-          text-zinc-300
-          px-4
-          py-2
-          rounded-lg
-        ">
-          High
-        </button>
-
-
-        <button className="
-          bg-zinc-800
-          text-zinc-300
-          px-4
-          py-2
-          rounded-lg
-        ">
-          Blocked
-        </button>
-
-
-      </div>
 
 
 
@@ -181,132 +216,228 @@ function Incidents() {
 
 
 
-        <table className="
-          w-full
-          text-left
-        ">
 
+        {
+          loading ? (
 
-          <thead>
+            <p className="text-zinc-400">
+              Carregando incidentes...
+            </p>
 
-            <tr className="
-              text-zinc-500
-              text-sm
-              border-b
-              border-zinc-800
-            ">
-
-
-              <th className="pb-4">
-                ID
-              </th>
-
-
-              <th>
-                Attack
-              </th>
-
-
-              <th>
-                Source
-              </th>
-
-
-              <th>
-                Severity
-              </th>
-
-
-              <th>
-                Status
-              </th>
-
-
-              <th>
-                Action
-              </th>
-
-
-              <th>
-                Time
-              </th>
-
-
-            </tr>
-
-
-          </thead>
+          ) : (
 
 
 
+            <div className="overflow-x-auto">
 
 
-          <tbody>
+              <table className="
+                w-full
+                text-left
+              ">
 
 
-            {incidents.map((incident) => (
 
-              <tr
-                key={incident.id}
-                className="
-                  border-b
-                  border-zinc-800
-                  text-zinc-300
-                "
-              >
+                <thead>
 
-
-                <td className="py-4">
-                  {incident.id}
-                </td>
+                  <tr className="
+                    text-zinc-500
+                    text-sm
+                    border-b
+                    border-zinc-800
+                  ">
 
 
-                <td>
-                  {incident.type}
-                </td>
+                    <th className="pb-4">
+                      ID
+                    </th>
 
 
-                <td>
-                  {incident.source}
-                </td>
+                    <th>
+                      Attack
+                    </th>
 
 
-                <td>
-
-                  <SeverityBadge
-                    severity={incident.severity}
-                  />
-
-                </td>
+                    <th>
+                      Source IP
+                    </th>
 
 
-                <td>
-                  {incident.status}
-                </td>
+                    <th>
+                      Severity
+                    </th>
 
 
-                <td>
-                  {incident.action}
-                </td>
+                    <th>
+                      Status
+                    </th>
 
 
-                <td>
-                  {incident.time}
-                </td>
+                    <th>
+                      Priority
+                    </th>
 
 
-              </tr>
-
-            ))}
-
-
-          </tbody>
+                    <th>
+                      Risk
+                    </th>
 
 
-        </table>
+                  </tr>
+
+
+                </thead>
+
+
+
+
+
+
+                <tbody>
+
+
+                  {
+                    incidents.map((incident)=>(
+
+
+                      <tr
+
+                        key={incident.id}
+
+                        onClick={() =>
+                          navigate(`/incidents/${incident.id}`)
+                        }
+
+                        className="
+                          border-b
+                          border-zinc-800
+                          text-zinc-300
+                          hover:bg-zinc-800/40
+                          transition
+                          cursor-pointer
+                        "
+
+                      >
+
+
+
+
+                        <td className="
+                          py-4
+                          text-blue-400
+                          font-semibold
+                        ">
+
+                          #{incident.id}
+
+                        </td>
+
+
+
+
+
+
+
+                        <td className="
+                          text-white
+                          font-medium
+                        ">
+
+                          {incident.attack_type}
+
+                        </td>
+
+
+
+
+
+
+
+                        <td>
+
+                          {incident.source_ip}
+
+                        </td>
+
+
+
+
+
+
+
+                        <td>
+
+                          <SeverityBadge
+
+                            severity={incident.severity}
+
+                          />
+
+                        </td>
+
+
+
+
+
+
+
+                        <td>
+
+                          {incident.status}
+
+                        </td>
+
+
+
+
+
+
+
+                        <td>
+
+                          {incident.priority}
+
+                        </td>
+
+
+
+
+
+
+
+                        <td>
+
+                          {incident.risk_score}/100
+
+                        </td>
+
+
+
+                      </tr>
+
+
+                    ))
+                  }
+
+
+
+                </tbody>
+
+
+              </table>
+
+
+            </div>
+
+
+          )
+        }
+
+
 
 
       </div>
+
 
 
 

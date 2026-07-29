@@ -1,21 +1,143 @@
+import {
+  useEffect,
+  useState
+} from "react"
+
+
 import MetricCard from "../components/ui/MetricCard"
 import StatusBadge from "../components/ui/StatusBadge"
-import { reports } from "../data/reports"
+
+import api from "../services/api"
+
 
 import {
   FileText,
-  Sparkles,
   Clock,
   CheckCircle,
-  Download
+  ShieldAlert
 } from "lucide-react"
 
 
 
-function Reports() {
+interface Report {
+
+  id: number
+
+  client: string
+
+  period: string
+
+  threats: number
+
+  status: string
+
+}
+
+
+
+
+
+function Reports(){
+
+
+  const [reports,setReports] = useState<Report[]>([])
+
+  const [loading,setLoading] = useState(true)
+
+
+
+
+
+  useEffect(()=>{
+
+
+    async function loadReports(){
+
+
+      try {
+
+
+        const response = await api.get("/reports")
+
+
+        setReports(response)
+
+
+      } catch(error){
+
+
+        console.error(
+          "Erro carregando reports:",
+          error
+        )
+
+
+      } finally {
+
+
+        setLoading(false)
+
+
+      }
+
+
+    }
+
+
+    loadReports()
+
+
+  },[])
+
+
+
+
+
+
+
+  const totalReports = reports.length
+
+
+
+  const completedReports = reports.filter(
+
+    report =>
+      report.status === "Completed"
+
+  ).length
+
+
+
+
+  const processingReports = reports.filter(
+
+    report =>
+      report.status === "Processing"
+
+  ).length
+
+
+
+
+  const totalThreats = reports.reduce(
+
+    (total,report)=>
+
+      total + report.threats,
+
+    0
+
+  )
+
+
+
+
+
+
 
 
   return (
+
 
     <div className="
       p-8
@@ -26,20 +148,27 @@ function Reports() {
 
       <div className="mb-8">
 
+
         <h1 className="
           text-3xl
           font-bold
           text-white
         ">
+
           Security Reports
+
         </h1>
+
+
 
 
         <p className="
           text-zinc-400
           mt-2
         ">
-          Relatórios automatizados de segurança gerados pelo AI SOC.
+
+          Relatórios automatizados de segurança gerados pelo SOC.
+
         </p>
 
 
@@ -51,46 +180,82 @@ function Reports() {
 
 
 
+
+
       <div className="
         grid
-        grid-cols-4
+        grid-cols-1
+        md:grid-cols-4
         gap-6
       ">
 
 
+
         <MetricCard
+
           title="Total Reports"
-          value="128"
-          icon={<FileText />}
+
+          value={totalReports}
+
+          icon={<FileText/>}
+
           color="text-blue-400"
+
         />
 
 
-        <MetricCard
-          title="AI Generated"
-          value="94"
-          icon={<Sparkles />}
-          color="text-purple-400"
-        />
+
 
 
         <MetricCard
-          title="Processing"
-          value="6"
-          icon={<Clock />}
-          color="text-yellow-400"
-        />
 
-
-        <MetricCard
           title="Completed"
-          value="118"
-          icon={<CheckCircle />}
+
+          value={completedReports}
+
+          icon={<CheckCircle/>}
+
           color="text-green-400"
+
         />
+
+
+
+
+
+        <MetricCard
+
+          title="Processing"
+
+          value={processingReports}
+
+          icon={<Clock/>}
+
+          color="text-yellow-400"
+
+        />
+
+
+
+
+
+        <MetricCard
+
+          title="Threats Found"
+
+          value={totalThreats}
+
+          icon={<ShieldAlert/>}
+
+          color="text-red-400"
+
+        />
+
 
 
       </div>
+
+
 
 
 
@@ -114,145 +279,204 @@ function Reports() {
           font-semibold
           mb-6
         ">
+
           Recent Reports
+
         </h2>
 
 
 
 
 
-        <table className="
-          w-full
-          text-left
-        ">
+
+        {
+
+          loading ? (
 
 
-          <thead>
+            <p className="text-zinc-400">
 
-            <tr className="
-              text-zinc-500
-              text-sm
-              border-b
-              border-zinc-800
-            ">
+              Carregando relatórios...
 
-
-              <th className="pb-4">
-                ID
-              </th>
-
-
-              <th>
-                Client
-              </th>
-
-
-              <th>
-                Period
-              </th>
-
-
-              <th>
-                Threats
-              </th>
-
-
-              <th>
-                Status
-              </th>
-
-
-              <th>
-                Action
-              </th>
-
-
-            </tr>
-
-          </thead>
+            </p>
 
 
 
+          ) : (
 
 
-          <tbody>
+
+            <div className="overflow-x-auto">
 
 
-            {reports.map((report) => (
-
-              <tr
-                key={report.id}
-                className="
-                  border-b
-                  border-zinc-800
-                  text-zinc-300
-                "
-              >
+              <table className="
+                w-full
+                text-left
+              ">
 
 
-                <td className="py-4">
-                  {report.id}
-                </td>
+                <thead>
 
 
-                <td className="text-white font-medium">
-                  {report.client}
-                </td>
-
-
-                <td>
-                  {report.period}
-                </td>
-
-
-                <td>
-                  {report.threats}
-                </td>
-
-
-                <td>
-
-                  <StatusBadge
-                    status={report.status}
-                  />
-
-                </td>
-
-
-                <td>
-
-                  <button className="
-                    text-blue-400
-                    flex
-                    items-center
-                    gap-2
+                  <tr className="
+                    text-zinc-500
+                    text-sm
+                    border-b
+                    border-zinc-800
                   ">
 
-                    <Download size={16}/>
 
-                    View
-
-                  </button>
-
-                </td>
+                    <th className="pb-4">
+                      ID
+                    </th>
 
 
-              </tr>
-
-            ))}
-
-
-          </tbody>
+                    <th>
+                      Client
+                    </th>
 
 
-        </table>
+                    <th>
+                      Period
+                    </th>
+
+
+                    <th>
+                      Threats
+                    </th>
+
+
+                    <th>
+                      Status
+                    </th>
+
+
+                  </tr>
+
+
+                </thead>
+
+
+
+
+
+
+
+                <tbody>
+
+
+                  {
+
+                    reports.map(report=>(
+
+
+                      <tr
+
+                        key={report.id}
+
+                        className="
+                          border-b
+                          border-zinc-800
+                          text-zinc-300
+                          hover:bg-zinc-800/40
+                          transition
+                        "
+
+                      >
+
+
+
+                        <td className="py-4">
+
+                          #{report.id}
+
+                        </td>
+
+
+
+
+
+                        <td className="
+                          text-white
+                          font-medium
+                        ">
+
+                          {report.client}
+
+                        </td>
+
+
+
+
+
+                        <td>
+
+                          {report.period}
+
+                        </td>
+
+
+
+
+
+                        <td>
+
+                          {report.threats}
+
+                        </td>
+
+
+
+
+
+                        <td>
+
+
+                          <StatusBadge
+
+                            status={report.status}
+
+                          />
+
+
+                        </td>
+
+
+
+
+                      </tr>
+
+
+                    ))
+
+                  }
+
+
+
+
+                </tbody>
+
+
+              </table>
+
+
+            </div>
+
+
+          )
+
+        }
+
 
 
       </div>
 
 
 
+
+
     </div>
+
 
   )
 

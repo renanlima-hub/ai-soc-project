@@ -1,3 +1,8 @@
+import {
+  useEffect,
+  useState
+} from "react"
+
 import MetricCard from "../components/ui/MetricCard"
 
 import {
@@ -8,37 +13,92 @@ import {
   AlertTriangle
 } from "lucide-react"
 
+import api from "../services/api"
+
 
 
 function Dashboard() {
 
 
-  const incidents = [
-    {
-      id: "#001",
-      type: "SQL Injection",
-      severity: "Critical",
-      status: "Blocked"
-    },
-    {
-      id: "#002",
-      type: "Brute Force",
-      severity: "High",
-      status: "Investigating"
-    },
-    {
-      id: "#003",
-      type: "Malware Detection",
-      severity: "Medium",
-      status: "Resolved"
-    },
-    {
-      id: "#004",
-      type: "Suspicious Login",
-      severity: "Low",
-      status: "Monitoring"
+  const [dashboard,setDashboard] = useState<any>(null)
+
+  const [incidents,setIncidents] = useState<any[]>([])
+
+
+
+  useEffect(()=>{
+
+
+    async function loadDashboard(){
+
+
+      try{
+
+
+        const dashboardData = await api.get(
+          "/dashboard"
+        )
+
+
+        const incidentsData = await api.get(
+          "/incidents"
+        )
+
+
+        setDashboard(
+          dashboardData
+        )
+
+
+        setIncidents(
+          incidentsData.slice(0,5)
+        )
+
+
+      }catch(error){
+
+        console.error(
+          "Erro ao carregar dashboard",
+          error
+        )
+
+      }
+
+
     }
-  ]
+
+
+    loadDashboard()
+
+
+  },[])
+
+
+
+
+
+  if(!dashboard){
+
+
+    return (
+
+      <div className="
+        min-h-screen
+        bg-black
+        p-8
+        text-white
+      ">
+
+        Loading dashboard...
+
+      </div>
+
+    )
+
+  }
+
+
+
 
 
 
@@ -53,12 +113,15 @@ function Dashboard() {
 
       <div className="mb-8">
 
+
         <h1 className="
           text-3xl
           font-bold
           text-white
         ">
+
           Security Overview
+
         </h1>
 
 
@@ -66,11 +129,15 @@ function Dashboard() {
           text-zinc-400
           mt-2
         ">
+
           Monitoramento inteligente de ameaças em tempo real
+
         </p>
 
 
       </div>
+
+
 
 
 
@@ -83,38 +150,72 @@ function Dashboard() {
 
 
         <MetricCard
+
           title="Critical Incidents"
-          value="24"
+
+          value={
+            dashboard.severity.critical
+          }
+
           icon={<ShieldAlert />}
+
           color="text-red-400"
+
         />
 
 
+
         <MetricCard
+
           title="Blocked Attacks"
-          value="542"
+
+          value={
+            dashboard.blocked_incidents
+          }
+
           icon={<ShieldCheck />}
+
           color="text-green-400"
+
         />
 
 
+
         <MetricCard
-          title="Protected Clients"
-          value="18"
+
+          title="Total Incidents"
+
+          value={
+            dashboard.total_incidents
+          }
+
           icon={<Users />}
+
           color="text-blue-400"
+
         />
 
 
+
         <MetricCard
+
           title="AI Security Score"
-          value="94%"
+
+          value={
+            `${dashboard.average_risk}%`
+          }
+
           icon={<Activity />}
+
           color="text-purple-400"
+
         />
 
 
       </div>
+
+
+
 
 
 
@@ -126,6 +227,7 @@ function Dashboard() {
         gap-6
         mt-8
       ">
+
 
 
         <div className="
@@ -143,8 +245,12 @@ function Dashboard() {
             font-semibold
             text-lg
           ">
+
             AI Threat Engine
+
           </h2>
+
+
 
 
           <div className="
@@ -165,31 +271,45 @@ function Dashboard() {
               justify-center
             ">
 
+
               <ShieldCheck
+
                 className="text-green-400"
+
                 size={30}
+
               />
+
 
             </div>
 
 
+
+
             <div>
+
 
               <p className="
                 text-green-400
                 font-bold
                 text-xl
               ">
+
                 Protected
+
               </p>
+
 
 
               <p className="
                 text-zinc-400
                 text-sm
               ">
+
                 IA operando normalmente
+
               </p>
+
 
             </div>
 
@@ -198,6 +318,8 @@ function Dashboard() {
 
 
         </div>
+
+
 
 
 
@@ -218,8 +340,11 @@ function Dashboard() {
             font-semibold
             text-lg
           ">
+
             Threat Activity
+
           </h2>
+
 
 
           <div className="
@@ -231,21 +356,32 @@ function Dashboard() {
           ">
 
 
-            {[40,70,55,90,60,80,45].map((height,index)=>(
+            {
 
-              <div
-                key={index}
-                className="
-                  flex-1
-                  bg-blue-500
-                  rounded-t-lg
-                "
-                style={{
-                  height:`${height}%`
-                }}
-              />
+              Object.values(
+                dashboard.severity
+              ).map(
+                (value:any,index)=>(
 
-            ))}
+                <div
+
+                  key={index}
+
+                  className="
+                    flex-1
+                    bg-blue-500
+                    rounded-t-lg
+                  "
+
+                  style={{
+                    height:`${value * 10}%`
+                  }}
+
+                />
+
+              ))
+
+            }
 
 
           </div>
@@ -255,6 +391,9 @@ function Dashboard() {
 
 
       </div>
+
+
+
 
 
 
@@ -271,6 +410,7 @@ function Dashboard() {
       ">
 
 
+
         <div className="
           flex
           items-center
@@ -280,7 +420,9 @@ function Dashboard() {
 
 
           <AlertTriangle
+
             className="text-yellow-400"
+
           />
 
 
@@ -289,11 +431,15 @@ function Dashboard() {
             text-lg
             font-semibold
           ">
+
             Recent Incidents
+
           </h2>
 
 
         </div>
+
+
 
 
 
@@ -314,17 +460,21 @@ function Dashboard() {
               border-zinc-800
             ">
 
+
               <th className="pb-3">
                 ID
               </th>
+
 
               <th>
                 Attack Type
               </th>
 
+
               <th>
                 Severity
               </th>
+
 
               <th>
                 Status
@@ -339,45 +489,64 @@ function Dashboard() {
 
 
 
+
           <tbody>
 
 
-            {incidents.map((incident)=>(
+            {
+              incidents.map(
+                incident=>(
 
 
-              <tr
-                key={incident.id}
-                className="
-                  border-b
-                  border-zinc-800
-                  text-zinc-300
-                "
-              >
+                <tr
 
-                <td className="py-4">
-                  {incident.id}
-                </td>
+                  key={incident.id}
 
+                  className="
+                    border-b
+                    border-zinc-800
+                    text-zinc-300
+                  "
 
-                <td>
-                  {incident.type}
-                </td>
+                >
 
 
-                <td className="text-red-400">
-                  {incident.severity}
-                </td>
+                  <td className="py-4">
+
+                    #{incident.id}
+
+                  </td>
 
 
-                <td>
-                  {incident.status}
-                </td>
+
+                  <td>
+
+                    {incident.attack_type}
+
+                  </td>
 
 
-              </tr>
+
+                  <td>
+
+                    {incident.severity}
+
+                  </td>
 
 
-            ))}
+
+                  <td>
+
+                    {incident.status}
+
+                  </td>
+
+
+                </tr>
+
+
+              ))
+            }
 
 
           </tbody>
