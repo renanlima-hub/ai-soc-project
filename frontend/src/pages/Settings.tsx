@@ -1,15 +1,13 @@
 import {
   Bot,
-  Bell,
   Database,
   ShieldCheck,
-  Zap,
-  Activity,
-  Network,
-  Cpu,
+  Server,
   Brain,
-  Lock,
-  FileText
+  Network,
+  Activity,
+  Code,
+  Cpu
 } from "lucide-react"
 
 
@@ -24,6 +22,7 @@ function Settings() {
       bg-black
       min-h-screen
     ">
+
 
 
       <div className="mb-8">
@@ -43,12 +42,11 @@ function Settings() {
           text-zinc-400
           mt-2
         ">
-          Gerencie configurações e integrações do AI SOC.
+          Informações e status dos componentes da plataforma AI SOC.
         </p>
 
 
       </div>
-
 
 
 
@@ -71,7 +69,7 @@ function Settings() {
           font-semibold
           mb-6
         ">
-          System Status
+          System Health
         </h2>
 
 
@@ -85,32 +83,61 @@ function Settings() {
         ">
 
 
+
           <StatusCard
-            title="AI Engine"
+
+            title="AI Threat Engine"
+
             status="Online"
+
+            description="Modelo de análise de ameaças ativo."
+
             icon={<Bot />}
+
           />
 
 
+
           <StatusCard
+
             title="Database"
+
             status="Connected"
+
+            description="Banco de dados operacional."
+
             icon={<Database />}
+
           />
 
 
+
           <StatusCard
+
             title="Security Layer"
+
             status="Active"
+
+            description="Proteção e análise funcionando."
+
             icon={<ShieldCheck />}
+
           />
+
 
 
           <StatusCard
-            title="API Service"
+
+            title="API Gateway"
+
             status="Running"
-            icon={<Activity />}
+
+            description="FastAPI backend conectado."
+
+            icon={<Server />}
+
           />
+
 
 
         </div>
@@ -134,6 +161,7 @@ function Settings() {
         rounded-2xl
         p-6
       ">
+
 
 
         <div className="
@@ -154,7 +182,7 @@ function Settings() {
             text-xl
             font-semibold
           ">
-            AI Threat Engine
+            AI Engine Configuration
           </h2>
 
 
@@ -164,184 +192,48 @@ function Settings() {
 
 
 
-        <div className="space-y-4">
+        <div className="
+          space-y-4
+        ">
 
 
-          <InfoRow
-            title="AI Model"
-            value="Security AI Engine v1.0"
+          <InfoCard
+
+            title="Threat Detection"
+
+            description="Análise automática de eventos e classificação de ameaças."
+
+            status="ACTIVE"
+
           />
 
 
-          <InfoRow
-            title="Threat Classification"
-            value="Automatic"
+
+          <InfoCard
+
+            title="Risk Scoring"
+
+            description="Cálculo automático de risco baseado em severidade."
+
+            status="ACTIVE"
+
           />
 
 
-          <InfoRow
+
+          <InfoCard
+
             title="MITRE ATT&CK Mapping"
-            value="Enabled"
-          />
 
+            description="Relacionamento automático entre ataques e técnicas MITRE."
 
-          <InfoRow
-            title="Confidence Threshold"
-            value="75%"
-          />
+            status="ACTIVE"
 
-
-        </div>
-
-
-      </div>
-
-
-
-
-
-
-
-
-
-      <div className="
-        mt-8
-        bg-zinc-900
-        border
-        border-zinc-800
-        rounded-2xl
-        p-6
-      ">
-
-
-        <div className="
-          flex
-          items-center
-          gap-3
-          mb-6
-        ">
-
-
-          <Zap
-            className="text-yellow-400"
-          />
-
-
-          <h2 className="
-            text-white
-            text-xl
-            font-semibold
-          ">
-            SOC Automation
-          </h2>
-
-
-        </div>
-
-
-
-
-
-        <div className="space-y-4">
-
-
-          <ConfigItem
-            title="Auto Block Threats"
-            description="Bloqueia automaticamente ameaças críticas identificadas."
-          />
-
-
-          <ConfigItem
-            title="Automatic Incident Creation"
-            description="Cria incidentes automaticamente após análise da IA."
-          />
-
-
-          <ConfigItem
-            title="Report Generation"
-            description="Geração automática de relatórios de segurança."
-          />
-
-
-          <ConfigItem
-            title="Threat Intelligence Sync"
-            description="Atualização automática de inteligência de ameaças."
           />
 
 
         </div>
 
-
-      </div>
-
-
-
-
-
-
-
-
-
-      <div className="
-        mt-8
-        bg-zinc-900
-        border
-        border-zinc-800
-        rounded-2xl
-        p-6
-      ">
-
-
-        <div className="
-          flex
-          items-center
-          gap-3
-          mb-6
-        ">
-
-
-          <Bell
-            className="text-blue-400"
-          />
-
-
-          <h2 className="
-            text-white
-            text-xl
-            font-semibold
-          ">
-            Notifications
-          </h2>
-
-
-        </div>
-
-
-
-
-
-        <div className="space-y-4">
-
-
-          <ConfigItem
-            title="Critical Alerts"
-            description="Receber alertas de incidentes críticos."
-          />
-
-
-          <ConfigItem
-            title="High Severity Alerts"
-            description="Notificar ameaças de alto impacto."
-          />
-
-
-          <ConfigItem
-            title="Security Reports"
-            description="Enviar relatórios automatizados."
-          />
-
-
-        </div>
 
 
       </div>
@@ -373,7 +265,7 @@ function Settings() {
 
 
           <Network
-            className="text-green-400"
+            className="text-blue-400"
           />
 
 
@@ -395,29 +287,55 @@ function Settings() {
         <div className="
           grid
           grid-cols-1
-          md:grid-cols-3
-          gap-6
+          md:grid-cols-2
+          gap-4
         ">
 
 
-          <StatusCard
-            title="SIEM Integration"
-            status="Connected"
-            icon={<Lock />}
-          />
+          <IntegrationCard
 
+            icon={<Activity />}
 
-          <StatusCard
             title="Threat Intelligence"
-            status="Active"
-            icon={<Network />}
+
+            status="READY"
+
           />
 
 
-          <StatusCard
-            title="Log Collector"
-            status="Running"
+
+          <IntegrationCard
+
+            icon={<Database />}
+
+            title="Database Connection"
+
+            status="CONNECTED"
+
+          />
+
+
+
+          <IntegrationCard
+
             icon={<Cpu />}
+
+            title="AI Processing"
+
+            status="ACTIVE"
+
+          />
+
+
+
+          <IntegrationCard
+
+            icon={<Code />}
+
+            title="SIEM Integration"
+
+            status="COMING SOON"
+
           />
 
 
@@ -444,64 +362,73 @@ function Settings() {
       ">
 
 
-        <div className="
-          flex
-          items-center
-          gap-3
+        <h2 className="
+          text-white
+          text-xl
+          font-semibold
+          mb-6
         ">
-
-
-          <FileText
-            className="text-purple-400"
-          />
-
-
-          <h2 className="
-            text-white
-            text-xl
-            font-semibold
-          ">
-            Platform Information
-          </h2>
-
-
-        </div>
-
+          Platform Information
+        </h2>
 
 
 
 
         <div className="
-          mt-6
-          space-y-3
+          grid
+          grid-cols-1
+          md:grid-cols-2
+          gap-4
           text-zinc-300
         ">
 
 
-          <p>
-            AI SOC Platform
-          </p>
+          <InfoLine
+
+            label="Application"
+
+            value="AI SOC Platform"
+
+          />
 
 
-          <p className="text-zinc-500">
-            Version: 1.0.0 Beta
-          </p>
+
+          <InfoLine
+
+            label="Version"
+
+            value="1.0.0"
+
+          />
 
 
-          <p className="text-zinc-500">
-            Environment: Production
-          </p>
+
+          <InfoLine
+
+            label="Environment"
+
+            value="Development"
+
+          />
 
 
-          <p className="text-zinc-500">
-            AI Engine: Operational
-          </p>
+
+          <InfoLine
+
+            label="Framework"
+
+            value="React + FastAPI"
+
+          />
+
 
 
         </div>
 
 
+
       </div>
+
 
 
 
@@ -525,13 +452,18 @@ function StatusCard({
 
   status,
 
+  description,
+
   icon
+
 
 }:{
 
   title:string
 
   status:string
+
+  description:string
 
   icon:React.ReactNode
 
@@ -554,20 +486,33 @@ function StatusCard({
       </div>
 
 
+
       <p className="
-        text-zinc-400
+        text-white
+        font-semibold
         mt-4
       ">
         {title}
       </p>
 
 
+
       <p className="
         text-green-400
-        font-semibold
-        mt-1
+        mt-2
+        font-medium
       ">
         {status}
+      </p>
+
+
+
+      <p className="
+        text-zinc-500
+        text-sm
+        mt-2
+      ">
+        {description}
       </p>
 
 
@@ -584,11 +529,14 @@ function StatusCard({
 
 
 
-function ConfigItem({
+function InfoCard({
 
   title,
 
-  description
+  description,
+
+  status
+
 
 }:{
 
@@ -596,26 +544,28 @@ function ConfigItem({
 
   description:string
 
+  status:string
+
 }){
 
 
   return (
 
     <div className="
-      flex
-      justify-between
-      items-center
       bg-zinc-950
       rounded-xl
       p-4
+      flex
+      justify-between
+      items-center
     ">
 
 
       <div>
 
-
         <p className="
           text-white
+          font-medium
         ">
           {title}
         </p>
@@ -624,6 +574,7 @@ function ConfigItem({
         <p className="
           text-zinc-500
           text-sm
+          mt-1
         ">
           {description}
         </p>
@@ -634,25 +585,85 @@ function ConfigItem({
 
 
 
+      <span className="
+        text-green-400
+        font-semibold
+        text-sm
+      ">
+        {status}
+      </span>
+
+
+    </div>
+
+  )
+
+}
+
+
+
+
+
+
+
+
+
+function IntegrationCard({
+
+  icon,
+
+  title,
+
+  status
+
+
+}:{
+
+  icon:React.ReactNode
+
+  title:string
+
+  status:string
+
+}){
+
+
+  return (
+
+    <div className="
+      bg-zinc-950
+      rounded-xl
+      p-5
+      flex
+      items-center
+      gap-4
+    ">
+
 
       <div className="
-        w-12
-        h-6
-        bg-blue-600
-        rounded-full
-        flex
-        items-center
-        justify-end
-        px-1
+        text-blue-400
       ">
+        {icon}
+      </div>
 
 
-        <div className="
-          w-4
-          h-4
-          bg-white
-          rounded-full
-        "/>
+
+      <div>
+
+        <p className="
+          text-white
+          font-medium
+        ">
+          {title}
+        </p>
+
+
+        <p className="
+          text-zinc-500
+          text-sm
+        ">
+          {status}
+        </p>
 
 
       </div>
@@ -670,16 +681,16 @@ function ConfigItem({
 
 
 
+function InfoLine({
 
-function InfoRow({
-
-  title,
+  label,
 
   value
 
+
 }:{
 
-  title:string
+  label:string
 
   value:string
 
@@ -689,27 +700,27 @@ function InfoRow({
   return (
 
     <div className="
-      flex
-      justify-between
       bg-zinc-950
       rounded-xl
       p-4
     ">
 
 
-      <span className="
-        text-zinc-400
+      <p className="
+        text-zinc-500
+        text-sm
       ">
-        {title}
-      </span>
+        {label}
+      </p>
 
 
-      <span className="
+      <p className="
         text-white
+        mt-1
         font-medium
       ">
         {value}
-      </span>
+      </p>
 
 
     </div>

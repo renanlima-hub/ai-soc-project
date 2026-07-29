@@ -3,79 +3,50 @@ import {
   useState
 } from "react"
 
-
-import MetricCard from "../components/ui/MetricCard"
-import StatusBadge from "../components/ui/StatusBadge"
-
-import api from "../services/api"
-
-
 import {
   FileText,
-  Clock,
-  CheckCircle,
-  ShieldAlert
+  ShieldAlert,
+  AlertTriangle,
+  Activity
 } from "lucide-react"
-
-
-
-interface Report {
-
-  id: number
-
-  client: string
-
-  period: string
-
-  threats: number
-
-  status: string
-
-}
-
-
 
 
 
 function Reports(){
 
 
-  const [reports,setReports] = useState<Report[]>([])
-
-  const [loading,setLoading] = useState(true)
-
-
+  const [incidents,setIncidents] = useState<any[]>([])
 
 
 
   useEffect(()=>{
 
 
-    async function loadReports(){
+    async function loadIncidents(){
 
 
       try {
 
 
-        const response = await api.get("/reports")
+        const response = await fetch(
+          "http://localhost:8000/api/incidents"
+        )
 
 
-        setReports(response)
+        const data = await response.json()
+
+
+        setIncidents(data)
+
 
 
       } catch(error){
 
 
         console.error(
-          "Erro carregando reports:",
+          "Erro ao carregar relatórios:",
           error
         )
-
-
-      } finally {
-
-
-        setLoading(false)
 
 
       }
@@ -84,7 +55,9 @@ function Reports(){
     }
 
 
-    loadReports()
+
+    loadIncidents()
+
 
 
   },[])
@@ -93,43 +66,102 @@ function Reports(){
 
 
 
-
-
-  const totalReports = reports.length
+  const total = incidents.length
 
 
 
-  const completedReports = reports.filter(
+  const critical = incidents.filter(
+    incident =>
+      incident.severity?.toLowerCase() === "critical"
+  ).length
 
-    report =>
-      report.status === "Completed"
 
+
+  const high = incidents.filter(
+    incident =>
+      incident.severity?.toLowerCase() === "high"
+  ).length
+
+
+
+  const medium = incidents.filter(
+    incident =>
+      incident.severity?.toLowerCase() === "medium"
+  ).length
+
+
+
+  const low = incidents.filter(
+    incident =>
+      incident.severity?.toLowerCase() === "low"
   ).length
 
 
 
 
-  const processingReports = reports.filter(
 
-    report =>
-      report.status === "Processing"
+  const averageRisk = total > 0
 
-  ).length
+    ? Math.round(
+
+        incidents.reduce(
+
+          (acc,incident)=>
+
+            acc + (incident.risk_score || 0),
+
+          0
+
+        ) / total
+
+      )
+
+    : 0
 
 
 
 
-  const totalThreats = reports.reduce(
 
-    (total,report)=>
 
-      total + report.threats,
+  const attacks = incidents.reduce(
 
-    0
+    (acc:any,incident)=>{
+
+
+      const type =
+        incident.attack_type ||
+        "Unknown"
+
+
+
+      acc[type] =
+        (acc[type] || 0) + 1
+
+
+
+      return acc
+
+
+    },
+
+    {}
 
   )
 
 
+
+
+  const mostCommonAttack = Object.keys(attacks)
+
+    .sort(
+
+      (a,b)=>
+
+        attacks[b] - attacks[a]
+
+    )[0]
+
+    || "No data"
 
 
 
@@ -139,37 +171,76 @@ function Reports(){
   return (
 
 
-    <div className="
+    <main className="
       p-8
-      bg-black
-      min-h-screen
+      text-white
     ">
 
 
-      <div className="mb-8">
+
+      <div className="
+        flex
+        justify-between
+        items-center
+        mb-8
+      ">
 
 
-        <h1 className="
-          text-3xl
-          font-bold
-          text-white
+        <div>
+
+
+          <h1 className="
+            text-3xl
+            font-bold
+          ">
+
+
+            Security Reports
+
+
+          </h1>
+
+
+
+          <p className="
+            text-zinc-400
+            mt-2
+          ">
+
+
+            Executive security overview
+
+
+          </p>
+
+
+        </div>
+
+
+
+
+
+        <button className="
+          flex
+          items-center
+          gap-2
+          bg-blue-600
+          hover:bg-blue-700
+          px-5
+          py-3
+          rounded-xl
+          transition
         ">
 
-          Security Reports
 
-        </h1>
-
+          <FileText size={18}/>
 
 
+          Generate Report
 
-        <p className="
-          text-zinc-400
-          mt-2
-        ">
 
-          Relatórios automatizados de segurança gerados pelo SOC.
+        </button>
 
-        </p>
 
 
       </div>
@@ -180,299 +251,366 @@ function Reports(){
 
 
 
-
-
-      <div className="
+      <section className="
         grid
-        grid-cols-1
-        md:grid-cols-4
+        grid-cols-4
+        gap-5
+        mb-8
+      ">
+
+
+
+        <MetricCard
+
+          title="Total Incidents"
+
+          value={total}
+
+          icon={<Activity size={22}/>}
+
+        />
+
+
+
+        <MetricCard
+
+          title="Critical"
+
+          value={critical}
+
+          icon={<ShieldAlert size={22}/>}
+
+        />
+
+
+
+        <MetricCard
+
+          title="High"
+
+          value={high}
+
+          icon={<AlertTriangle size={22}/>}
+
+        />
+
+
+
+        <MetricCard
+
+          title="Risk Score"
+
+          value={`${averageRisk}%`}
+
+          icon={<Activity size={22}/>}
+
+        />
+
+
+
+      </section>
+
+
+
+
+
+
+
+      <section className="
+        grid
+        grid-cols-2
         gap-6
       ">
 
 
 
-        <MetricCard
 
-          title="Total Reports"
-
-          value={totalReports}
-
-          icon={<FileText/>}
-
-          color="text-blue-400"
-
-        />
-
-
-
-
-
-        <MetricCard
-
-          title="Completed"
-
-          value={completedReports}
-
-          icon={<CheckCircle/>}
-
-          color="text-green-400"
-
-        />
-
-
-
-
-
-        <MetricCard
-
-          title="Processing"
-
-          value={processingReports}
-
-          icon={<Clock/>}
-
-          color="text-yellow-400"
-
-        />
-
-
-
-
-
-        <MetricCard
-
-          title="Threats Found"
-
-          value={totalThreats}
-
-          icon={<ShieldAlert/>}
-
-          color="text-red-400"
-
-        />
-
-
-
-      </div>
-
-
-
-
-
-
-
-
-
-      <div className="
-        mt-8
-        bg-zinc-900
-        border
-        border-zinc-800
-        rounded-2xl
-        p-6
-      ">
-
-
-        <h2 className="
-          text-white
-          text-xl
-          font-semibold
-          mb-6
+        <div className="
+          bg-zinc-900
+          border
+          border-zinc-800
+          rounded-2xl
+          p-6
         ">
 
-          Recent Reports
 
-        </h2>
-
-
-
-
-
-
-        {
-
-          loading ? (
+          <h2 className="
+            font-semibold
+            text-lg
+            mb-5
+          ">
 
 
-            <p className="text-zinc-400">
+            Severity Distribution
 
-              Carregando relatórios...
 
-            </p>
+          </h2>
 
 
 
-          ) : (
+          <div className="
+            space-y-3
+          ">
+
+
+            <ReportRow
+
+              label="Critical"
+
+              value={critical}
+
+            />
+
+
+            <ReportRow
+
+              label="High"
+
+              value={high}
+
+            />
+
+
+            <ReportRow
+
+              label="Medium"
+
+              value={medium}
+
+            />
+
+
+            <ReportRow
+
+              label="Low"
+
+              value={low}
+
+            />
+
+
+          </div>
+
+
+        </div>
 
 
 
-            <div className="overflow-x-auto">
 
 
-              <table className="
-                w-full
-                text-left
+
+
+        <div className="
+          bg-zinc-900
+          border
+          border-zinc-800
+          rounded-2xl
+          p-6
+        ">
+
+
+
+          <h2 className="
+            font-semibold
+            text-lg
+            mb-5
+          ">
+
+
+            Threat Intelligence
+
+
+          </h2>
+
+
+
+
+          <div className="
+            space-y-4
+          ">
+
+
+            <div>
+
+
+              <p className="
+                text-zinc-400
+                text-sm
+              ">
+
+                Most Common Attack
+
+              </p>
+
+
+
+              <p className="
+                text-xl
+                font-bold
               ">
 
 
-                <thead>
+                {mostCommonAttack}
 
 
-                  <tr className="
-                    text-zinc-500
-                    text-sm
-                    border-b
-                    border-zinc-800
-                  ">
-
-
-                    <th className="pb-4">
-                      ID
-                    </th>
-
-
-                    <th>
-                      Client
-                    </th>
-
-
-                    <th>
-                      Period
-                    </th>
-
-
-                    <th>
-                      Threats
-                    </th>
-
-
-                    <th>
-                      Status
-                    </th>
-
-
-                  </tr>
-
-
-                </thead>
-
-
-
-
-
-
-
-                <tbody>
-
-
-                  {
-
-                    reports.map(report=>(
-
-
-                      <tr
-
-                        key={report.id}
-
-                        className="
-                          border-b
-                          border-zinc-800
-                          text-zinc-300
-                          hover:bg-zinc-800/40
-                          transition
-                        "
-
-                      >
-
-
-
-                        <td className="py-4">
-
-                          #{report.id}
-
-                        </td>
-
-
-
-
-
-                        <td className="
-                          text-white
-                          font-medium
-                        ">
-
-                          {report.client}
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-                          {report.period}
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-                          {report.threats}
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-
-                          <StatusBadge
-
-                            status={report.status}
-
-                          />
-
-
-                        </td>
-
-
-
-
-                      </tr>
-
-
-                    ))
-
-                  }
-
-
-
-
-                </tbody>
-
-
-              </table>
+              </p>
 
 
             </div>
 
 
-          )
 
-        }
 
+
+            <div>
+
+
+              <p className="
+                text-zinc-400
+                text-sm
+              ">
+
+                Total Analyzed Events
+
+              </p>
+
+
+
+              <p className="
+                text-xl
+                font-bold
+              ">
+
+
+                {total}
+
+
+              </p>
+
+
+            </div>
+
+
+          </div>
+
+
+
+        </div>
+
+
+
+      </section>
+
+
+
+
+
+    </main>
+
+
+  )
+
+}
+
+
+
+
+
+
+
+function MetricCard({
+  title,
+  value,
+  icon
+}:any){
+
+
+  return (
+
+
+    <div className="
+      bg-zinc-900
+      border
+      border-zinc-800
+      rounded-2xl
+      p-5
+    ">
+
+
+      <div className="
+        flex
+        justify-between
+        items-center
+        text-zinc-400
+        mb-4
+      ">
+
+
+        {title}
+
+
+        {icon}
 
 
       </div>
 
 
 
+
+      <p className="
+        text-3xl
+        font-bold
+      ">
+
+
+        {value}
+
+
+      </p>
+
+
+
+    </div>
+
+
+  )
+
+}
+
+
+
+
+
+function ReportRow({
+  label,
+  value
+}:any){
+
+
+  return (
+
+
+    <div className="
+      flex
+      justify-between
+      bg-zinc-950
+      rounded-xl
+      p-3
+    ">
+
+
+      <span className="text-zinc-400">
+
+        {label}
+
+      </span>
+
+
+      <span className="font-bold">
+
+        {value}
+
+      </span>
 
 
     </div>

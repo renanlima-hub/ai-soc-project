@@ -1,10 +1,9 @@
-import {
-  Bell,
-  Search
-} from "lucide-react"
+import NotificationDropdown from "./NotificationDropdown"
+
 
 
 function Header() {
+
 
   return (
 
@@ -15,46 +14,9 @@ function Header() {
       bg-black
       flex
       items-center
-      justify-between
+      justify-end
       px-8
     ">
-
-
-      <div className="
-        flex
-        items-center
-        gap-4
-      ">
-
-        <div className="
-          bg-zinc-900
-          border
-          border-zinc-800
-          rounded-xl
-          px-4
-          py-2
-          flex
-          items-center
-          gap-2
-        ">
-
-          <Search 
-            size={18}
-            className="text-zinc-400"
-          />
-
-          <span className="
-            text-zinc-500
-            text-sm
-          ">
-            Buscar ameaças...
-          </span>
-
-
-        </div>
-
-
-      </div>
 
 
 
@@ -65,25 +27,47 @@ function Header() {
       ">
 
 
-        <button className="
-          relative
-          text-zinc-400
-          hover:text-white
+        <div className="
+          flex
+          items-center
+          gap-3
+          bg-zinc-900
+          border
+          border-zinc-800
+          rounded-xl
+          px-4
+          py-2
         ">
 
-          <Bell size={22}/>
+
+          <div className="
+            w-2
+            h-2
+            rounded-full
+            bg-green-500
+          "/>
+
+
 
           <span className="
-            absolute
-            -top-1
-            -right-1
-            w-3
-            h-3
-            rounded-full
-            bg-red-500
-          " />
+            text-green-400
+            text-sm
+            font-medium
+          ">
 
-        </button>
+            AI Engine Online
+
+          </span>
+
+
+        </div>
+
+
+
+
+        <NotificationDropdown />
+
+
 
 
 
@@ -92,6 +76,7 @@ function Header() {
           items-center
           gap-3
         ">
+
 
 
           <div className="
@@ -105,35 +90,49 @@ function Header() {
             text-white
             font-bold
           ">
+
             RL
+
           </div>
 
 
+
+
           <div>
+
 
             <p className="
               text-white
               text-sm
               font-medium
             ">
+
               Renan Lima
+
             </p>
+
 
 
             <p className="
               text-zinc-500
               text-xs
             ">
+
               Security Analyst
+
             </p>
 
+
           </div>
+
 
 
         </div>
 
 
+
       </div>
+
 
 
     </header>

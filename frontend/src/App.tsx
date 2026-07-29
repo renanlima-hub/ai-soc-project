@@ -5,10 +5,17 @@ import {
   Navigate
 } from "react-router-dom"
 
+
 import Sidebar from "./components/Sidebar"
 import Header from "./components/Header"
 
+
+import Login from "./pages/Login"
+
+
 import Dashboard from "./pages/Dashboard"
+import Analyze from "./pages/Analyze"
+
 import Incidents from "./pages/Incidents"
 import IncidentDetails from "./pages/IncidentDetails"
 
@@ -21,158 +28,158 @@ import Settings from "./pages/Settings"
 
 
 
-function App() {
+function Layout(){
 
 
   return (
 
+    <div className="
+      flex
+      min-h-screen
+      bg-black
+    ">
 
-    <BrowserRouter>
+
+      <Sidebar />
 
 
       <div className="
+        flex-1
         flex
-        min-h-screen
-        bg-black
+        flex-col
       ">
 
 
+        <Header />
 
-        <Sidebar />
 
+        <Routes>
 
 
-        <div className="
-          flex-1
-          flex
-          flex-col
-        ">
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
 
 
+          <Route
+            path="/analyze"
+            element={<Analyze />}
+          />
 
-          <Header />
 
+          <Route
+            path="/incidents"
+            element={<Incidents />}
+          />
 
 
-          <Routes>
+          <Route
+            path="/incidents/:id"
+            element={<IncidentDetails />}
+          />
 
 
+          <Route
+            path="/reports"
+            element={<Reports />}
+          />
 
-            <Route
 
-              path="/dashboard"
+          <Route
+            path="/clients"
+            element={<Clients />}
+          />
 
-              element={<Dashboard />}
 
-            />
+          <Route
+            path="/clients/:id"
+            element={<ClientDetails />}
+          />
 
 
+          <Route
+            path="/settings"
+            element={<Settings />}
+          />
 
 
+          <Route
+            path="*"
+            element={
+              <Navigate to="/dashboard" />
+            }
+          />
 
-            <Route
 
-              path="/incidents"
-
-              element={<Incidents />}
-
-            />
-
-
-
-
-
-            <Route
-
-              path="/incidents/:id"
-
-              element={<IncidentDetails />}
-
-            />
-
-
-
-
-
-            <Route
-
-              path="/reports"
-
-              element={<Reports />}
-
-            />
-
-
-
-
-
-            <Route
-
-              path="/clients"
-
-              element={<Clients />}
-
-            />
-
-
-
-
-
-            <Route
-
-              path="/clients/:id"
-
-              element={<ClientDetails />}
-
-            />
-
-
-
-
-
-            <Route
-
-              path="/settings"
-
-              element={<Settings />}
-
-            />
-
-
-
-
-
-            <Route
-
-              path="*"
-
-              element={
-                <Navigate to="/dashboard"/>
-              }
-
-            />
-
-
-
-          </Routes>
-
-
-
-        </div>
-
+        </Routes>
 
 
       </div>
 
 
-
-    </BrowserRouter>
-
+    </div>
 
   )
 
 }
 
+
+
+
+
+function App(){
+
+
+  return (
+
+    <BrowserRouter>
+
+
+      <Routes>
+
+
+        {/* Página inicial abre o login */}
+
+        <Route
+
+          path="/"
+
+          element={<Login />}
+
+        />
+
+
+
+        <Route
+
+          path="/login"
+
+          element={<Login />}
+
+        />
+
+
+
+        {/* Sistema SOC */}
+
+        <Route
+
+          path="/*"
+
+          element={<Layout />}
+
+        />
+
+
+      </Routes>
+
+
+    </BrowserRouter>
+
+  )
+
+}
 
 
 export default App
